@@ -1,4 +1,6 @@
 import scipy.io
+import numpy as np
+import mat73
 
 def loadmat(filename):
     '''
@@ -7,7 +9,10 @@ def loadmat(filename):
     from mat files. It calls the function check keys to cure all entries
     which are still mat-objects
     '''
-    data = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True)
+    try:
+        data = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True)
+    except:
+        data = mat73.loadmat(filename)
     return _check_keys(data)
 
 def _check_keys(dict):
@@ -18,7 +23,7 @@ def _check_keys(dict):
     for key in dict:
         if isinstance(dict[key], scipy.io.matlab.mio5_params.mat_struct):
             dict[key] = _todict(dict[key])
-        elif isinstance(dict[key], np.ndarray) and len(elem) > 0 and isinstance(dict[key][0], scipy.io.matlab.mio5_params.mat_struct):
+        elif isinstance(dict[key], np.ndarray) and len(dict[key]) > 0 and isinstance(dict[key][0], scipy.io.matlab.mio5_params.mat_struct):
             dict[key] = [_todict(subelem) for subelem in elem]
     return dict
 

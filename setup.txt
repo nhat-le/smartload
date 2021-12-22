@@ -1,0 +1,12 @@
+from setuptools import setup
+
+setup(
+    name='smartload',
+    version='1.0',
+    packages=[''],
+    url='',
+    license='MIT',
+    author='Nhat Le',
+    author_email='nmle@mit.edu',
+    description='Smart loading of nested mat files'
+)
