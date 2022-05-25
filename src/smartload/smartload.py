@@ -1,6 +1,8 @@
 import scipy.io
 import numpy as np
+import os
 import mat73
+import pickle
 
 def loadmat(filename):
     '''
@@ -11,9 +13,10 @@ def loadmat(filename):
     '''
     try:
         data = scipy.io.loadmat(filename, struct_as_record=False, squeeze_me=True)
+        return _check_keys(data)
     except:
         data = mat73.loadmat(filename)
-    return _check_keys(data)
+        return data
 
 def _check_keys(dict):
     '''
@@ -41,4 +44,34 @@ def _todict(matobj):
         else:
             dict[strg] = elem
     return dict
+
+
+def load_pickle(path):
+    '''
+    Smart loading of pickle object
+    :param path: str: path to the picle file
+    :return: contents of the pickle file
+    '''
+    data = pickle.load(open(path, 'rb'))
+    return data
+
+def save_pickle(data, path):
+    '''
+    Save data to a pickle file
+    :param data: the data to be saved
+    :param path: the path to save the data to
+    :return: 1 if saved successfully
+    '''
+    # Check that path does not exist
+    if os.path.exists(path):
+        raise IOError('Path exists')
+    pickle.dump(data, open(path, 'wb'))
+    return 1
+
+
+
+
+if __name__ == '__main__':
+    filepath = '/Users/minhnhatle/Dropbox (MIT)/Sur/2p1/Feb2021/e54blockworldrolling_022321/regionData_e54_022321pix.mat'
+    loadmat(filepath)
 
